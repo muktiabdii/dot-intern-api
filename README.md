@@ -1,4 +1,4 @@
-# 📅 DOT Intern Event API
+# 📅 Event Management System
 
 **Backend REST API** for simple event management, built using **NestJS** as part of an **internship technical assessment**. This project focuses on authentication, authorization, API design, and testability rather than feature breadth. 
 
