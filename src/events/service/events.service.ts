@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from '../entities/event.entity';
@@ -45,15 +49,10 @@ export class EventsService {
 
   async update(id: string, partial: Partial<CreateEventDto>, user: User) {
     const event = await this.findOne(id);
-    if (!event)
-      throw new (require('@nestjs/common').NotFoundException)(
-        'Event not found',
-      );
+    if (!event) throw new NotFoundException('Event not found');
     // only organizer who owns the event can update
     if (!event.organizer || event.organizer.id !== user.id)
-      throw new (require('@nestjs/common').ForbiddenException)(
-        'Not authorized',
-      );
+      throw new ForbiddenException('Not authorized');
 
     if (partial.title !== undefined) event.title = partial.title;
     if (partial.description !== undefined)
@@ -66,14 +65,9 @@ export class EventsService {
 
   async remove(id: string, user: User) {
     const event = await this.findOne(id);
-    if (!event)
-      throw new (require('@nestjs/common').NotFoundException)(
-        'Event not found',
-      );
+    if (!event) throw new NotFoundException('Event not found');
     if (!event.organizer || event.organizer.id !== user.id)
-      throw new (require('@nestjs/common').ForbiddenException)(
-        'Not authorized',
-      );
+      throw new ForbiddenException('Not authorized');
 
     await this.repo.remove(event);
     return { success: true };

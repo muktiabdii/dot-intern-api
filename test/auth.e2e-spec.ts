@@ -39,13 +39,12 @@ describe('Auth & Protected Routes (E2E)', () => {
       .expect(201);
 
     expect(loginRes.body).toBeDefined();
-    expect(loginRes.body.accessToken).toBeDefined();
+    const loginBody = loginRes.body as { accessToken?: string };
+    expect(typeof loginBody.accessToken).toBe('string');
   });
 
   it('Should return 401 when accessing protected endpoint without token', async () => {
-    await request(app.getHttpServer())
-      .get('/events')
-      .expect(401);
+    await request(app.getHttpServer()).get('/events').expect(401);
   });
 
   it('Should return 401 when accessing protected endpoint with invalid token', async () => {
@@ -70,7 +69,8 @@ describe('Auth & Protected Routes (E2E)', () => {
       .send({ email, password })
       .expect(201);
 
-    const token = loginRes.body.accessToken;
+    const loginBody = loginRes.body as { accessToken?: string };
+    const token = loginBody.accessToken as string;
 
     await request(app.getHttpServer())
       .get('/events')

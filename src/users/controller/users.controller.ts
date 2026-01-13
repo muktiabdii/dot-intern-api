@@ -21,6 +21,6 @@ export class UsersController {
     @CurrentUser() user: User,
     @Body() dto: UpdateProfileDto,
   ) {
-    return this.usersService.updateProfile(user.id, dto as any);
+    return this.usersService.updateProfile(user.id, dto);
   }
 }

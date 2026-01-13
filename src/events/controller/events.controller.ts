@@ -58,7 +58,7 @@ export class EventsController {
     @Body() dto: UpdateEventDto,
     @CurrentUser() user: User,
   ) {
-    return this.eventsService.update(id, dto as any, user);
+    return this.eventsService.update(id, dto as Partial<CreateEventDto>, user);
   }
 
   @Delete(':id')

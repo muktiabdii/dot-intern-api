@@ -38,8 +38,8 @@ export class AuthService {
       role,
     });
 
-    const { password, ...rest } = user as any;
-    return rest;
+    // Returning the user entity is safe because password is excluded by ClassSerializerInterceptor
+    return user;
   }
 
   async validateUser(email: string, password: string) {
@@ -47,8 +47,8 @@ export class AuthService {
     if (!user) return null;
     const match = await bcrypt.compare(password, user.password);
     if (!match) return null;
-    const { password: _p, ...rest } = user as any;
-    return rest;
+    // Return user; ClassSerializerInterceptor will omit password when serialized
+    return user;
   }
 
   async login(dto: LoginDto) {
