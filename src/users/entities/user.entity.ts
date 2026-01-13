@@ -10,8 +10,8 @@ import { EventRegistration } from '../../registrations/entities/registration.ent
 import { Feedback } from '../../feedbacks/entities/feedback.entity';
 
 export enum UserRole {
-  USER = 'USER',
-  ORGANIZER = 'ORGANIZER',
+  USER = 'user',
+  ORGANIZER = 'organizer',
 }
 
 @Entity('users')
