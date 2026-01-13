@@ -36,17 +36,6 @@ export class FeedbacksService {
 
     const fb = this.repo.create({ content: dto.content, user, event });
     const saved = await this.repo.save(fb);
-
-    // remove sensitive fields
-    if (saved.user && (saved.user as any).password)
-      delete (saved.user as any).password;
-    if (
-      saved.event &&
-      saved.event.organizer &&
-      (saved.event.organizer as any).password
-    )
-      delete (saved.event.organizer as any).password;
-
     return saved;
   }
 
@@ -69,14 +58,19 @@ export class FeedbacksService {
     return { success: true };
   }
 
-  async findForEvent(eventId: string) {
-    const items = await this.repo.find({
+  async findForEvent(eventId: string, page = 1, limit = 10) {
+    const take = Math.min(limit, 100);
+    const skip = (Math.max(page, 1) - 1) * take;
+    const [items, total] = await this.repo.findAndCount({
       where: { event: { id: eventId } },
       relations: ['user'],
+      take,
+      skip,
+      order: { createdAt: 'DESC' },
     });
-    items.forEach((i) => {
-      if (i.user && (i.user as any).password) delete (i.user as any).password;
-    });
-    return items;
+    return {
+      data: items,
+      meta: { total, page: Math.max(page, 1), limit: take },
+    };
   }
 }

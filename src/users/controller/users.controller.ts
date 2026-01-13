@@ -12,9 +12,7 @@ export class UsersController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async profile(@CurrentUser() user: User) {
-    const u = await this.usersService.findById(user.id);
-    if (u && (u as any).password) delete (u as any).password;
-    return u;
+    return this.usersService.findById(user.id);
   }
 
   @Patch('profile')

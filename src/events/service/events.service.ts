@@ -17,33 +17,30 @@ export class EventsService {
       organizer,
     });
     const saved = await this.repo.save(event);
-    if (saved.organizer && (saved.organizer as any).password) {
-      // remove password before returning
-      delete (saved.organizer as any).password;
-    }
     return saved;
   }
 
-  // optional: add listing methods
-  async findAll() {
-    const items = await this.repo.find({
-      relations: ['organizer', 'registrations', 'feedbacks'],
+  // listing methods with pagination
+  async findAll(page = 1, limit = 10) {
+    const take = Math.min(limit, 100);
+    const skip = (Math.max(page, 1) - 1) * take;
+    const [items, total] = await this.repo.findAndCount({
+      relations: ['organizer'],
+      take,
+      skip,
+      order: { date: 'ASC' },
     });
-    items.forEach((item) => {
-      if (item.organizer && (item.organizer as any).password)
-        delete (item.organizer as any).password;
-    });
-    return items;
+    return {
+      data: items,
+      meta: { total, page: Math.max(page, 1), limit: take },
+    };
   }
 
   async findOne(id: string) {
-    const item = await this.repo.findOne({
+    return this.repo.findOne({
       where: { id },
       relations: ['organizer', 'registrations', 'feedbacks'],
     });
-    if (item && item.organizer && (item.organizer as any).password)
-      delete (item.organizer as any).password;
-    return item;
   }
 
   async update(id: string, partial: Partial<CreateEventDto>, user: User) {
@@ -64,8 +61,6 @@ export class EventsService {
     if (partial.date !== undefined) event.date = new Date(partial.date);
 
     const saved = await this.repo.save(event);
-    if (saved.organizer && (saved.organizer as any).password)
-      delete (saved.organizer as any).password;
     return saved;
   }
 

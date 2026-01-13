@@ -5,6 +5,7 @@ import {
   OneToMany,
   CreateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { Event } from '../../events/entities/event.entity';
 import { EventRegistration } from '../../registrations/entities/registration.entity';
 import { Feedback } from '../../feedbacks/entities/feedback.entity';
@@ -26,6 +27,7 @@ export class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({

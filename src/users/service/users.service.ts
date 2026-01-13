@@ -50,7 +50,6 @@ export class UsersService {
       user.password = await bcrypt.hash(dto.password, 10);
 
     const saved = await this.usersRepo.save(user);
-    if ((saved as any).password) delete (saved as any).password;
     return saved;
   }
 }

@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventRegistration } from '../entities/registration.entity';
+import { RegistrationResponseDto } from '../dto/registration-response.dto';
 import { User } from '../../users/entities/user.entity';
 import { EventsService } from '../../events/service/events.service';
 
@@ -28,28 +29,30 @@ export class RegistrationsService {
 
     const reg = this.repo.create({ user, event });
     const saved = await this.repo.save(reg);
-    // remove sensitive fields
-    if (saved.user && (saved.user as any).password)
-      delete (saved.user as any).password;
-    if (
-      saved.event &&
-      saved.event.organizer &&
-      (saved.event.organizer as any).password
-    )
-      delete (saved.event.organizer as any).password;
-    return saved;
+    return new RegistrationResponseDto({
+      id: saved.id,
+      userId: saved.user.id,
+      eventId: saved.event.id,
+      createdAt: saved.createdAt,
+    });
   }
 
-  async findForUser(userId: string) {
-    const items = await this.repo.find({
+  async findForUser(userId: string, page = 1, limit = 10) {
+    const take = Math.min(limit, 100);
+    const skip = (Math.max(page, 1) - 1) * take;
+    const [items, total] = await this.repo.findAndCount({
       where: { user: { id: userId } },
-      relations: ['event', 'event.organizer'],
+      relations: ['event'],
+      take,
+      skip,
+      order: { createdAt: 'DESC' },
     });
-    items.forEach((r) => {
-      if (r.event && r.event.organizer && (r.event.organizer as any).password)
-        delete (r.event.organizer as any).password;
-    });
-    // return only events the user joined
-    return items.map((r) => r.event);
+    const data = items.map((r) => ({
+      id: r.id,
+      userId: r.user.id,
+      eventId: r.event.id,
+      createdAt: r.createdAt,
+    }));
+    return { data, meta: { total, page: Math.max(page, 1), limit: take } };
   }
 }
