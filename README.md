@@ -1,139 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📅 DOT Intern Event API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-# Dot Intern Event API
-
-A simple event management REST API implemented with NestJS — created as an internship technical test.
-
-## Project Overview
-
-This application provides endpoints for managing events, registering users for events and leaving feedback. The API is built as a small, pragmatic backend suitable for an internship-level technical evaluation.
-
-Use case: Event management API for a technical test (organizers can create events; users can register and leave feedback).
+**Backend REST API** for simple event management, built using **NestJS** as part of an **internship technical assessment**. This project focuses on authentication, authorization, API design, and testability rather than feature breadth. 
 
 ---
 
-## Features
+## 🎯 Project Purpose
 
-- JWT-based authentication (login / register)
-- Role support: **user** and **organizer**
-- Event management (create, update, delete by organizers)
-- Event registration (users can join events)
-- Feedback system (users can leave feedback for events they joined; organizers can delete feedback on their events)
-- Pagination support on list endpoints
-- Swagger (OpenAPI) documentation available
-- E2E tests for authentication and protected routes
+This repository was specifically created to demonstrate:
 
----
+* **Proper API Structure** and organization.
+* **Secure Authentication** based on JWT.
+* **Role-Based Access Control (RBAC)** (User & Organizer).
+* **Clear Separation of Concerns** between layers.
+* **End-to-End (E2E) Testing** for token validation and protected routes.
+* **API Documentation** using Swagger.
 
-## Tech Stack
-
-- NestJS
-- TypeScript
-- PostgreSQL
-- TypeORM
-- JWT Authentication
-- Swagger (OpenAPI)
-- Jest (e2e testing)
+The scope of this project is intentionally kept concise to align with the expectations of an internship-level technical evaluation. 
 
 ---
 
-## Architecture Pattern
+## ✨ Core Features
 
-This project uses a **Layered Architecture** comprised of the following layers:
-
-- Controller — handles HTTP requests and maps them to services
-- Service — contains business logic and orchestrates operations
-- Repository — data access layer (TypeORM entities + repositories)
-
-Why layered?
-- Familiar and easy to reason about for small-to-medium projects
-- Clear separation of concerns between HTTP handling, business logic and data persistence
-- Appropriate scope for an internship technical evaluation
-
-Note: For larger systems, Clean Architecture or Hexagonal Architecture could be adopted for improved decoupling; the layered approach here was chosen intentionally for clarity and brevity.
+* 🔐 **JWT Authentication**: User registration and login.
+* 👥 **Role Support**: Supports `user` and `organizer` roles.
+* 🎫 **Event Management**: Create, update, and delete events (exclusive to `organizer`).
+* 📝 **Event Registration**: Users can register for available events.
+* 💬 **Feedback System**: Review system for each event.
+* 📑 **Pagination**: Implemented on list endpoints for data efficiency.
+* 📖 **Swagger Documentation**: Interactive API documentation.
+* 🧪 **E2E Testing**: Focused on token validation & protected routes.
 
 ---
 
-## API Documentation (Swagger)
+## 🛠️ Tech Stack
 
-Interactive API docs are available at:
-
-http://localhost:3000/api/docs
-
-Swagger documents all existing endpoints and supports JWT Bearer authentication using the **Authorize** button. To call protected endpoints from the UI, click **Authorize** and enter a value in the form "Bearer <token>".
-
-Resource tags in Swagger: Auth, Users, Events, Registrations, Feedbacks, JWT Auth
+* **Framework**: [NestJS](https://nestjs.com/) 
+* **Language**: [TypeScript](https://www.typescriptlang.org/)
+* **Database**: [PostgreSQL](https://www.postgresql.org/) 
+* **ORM**: [TypeORM](https://typeorm.io/)
+* **Security**: JWT (JSON Web Token)
+* **Documentation**: Swagger (OpenAPI)
+* **Testing**: Jest (E2E Testing)
 
 ---
 
-## Running the project
+## 🏗️ Architecture Overview
 
-1. Install dependencies
+This project implements a **Layered Architecture** pattern with clear responsibility boundaries:
+
+`Controller ➔ Service ➔ Repository`
+
+### Layer Responsibilities
+
+* **Controller**: Handles HTTP requests & responses, request validation (DTOs), and authentication guards.
+* **Service**: Contains core application business logic, workflow orchestration, and business rule enforcement.
+* **Repository**: Handles data persistence using TypeORM and abstracts database operations.
+
+### Why Layered Architecture?
+
+Chosen because it provides the best balance for this project's scale:
+
+* ✅ Easy to understand and review within a limited timeframe.
+* ✅ Provides clear separation of concerns without overengineering.
+* ✅ Enables meaningful E2E testing without complex abstractions.
+
+---
+
+## 📚 API Documentation (Swagger)
+
+Interactive API documentation is available at:
+ `http://localhost:3000/api/docs`
+
+**How to use Protected Endpoints:**
+
+1. Login to obtain an `access_token`.
+2. Click the **Authorize** button in the Swagger UI.
+3. Enter the format: `Bearer <your_token>`. 
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
 
 ```bash
 npm install
+
 ```
 
-2. Environment variables
+### 2. Environment Configuration
 
-Copy `.env.example` (if present) and ensure environment values are set for:
+Set the following environment variables (or use a `.env` file):
 
-- DATABASE_URL (Postgres connection string)
-- JWT_SECRET
-- PORT (optional, defaults to 3000)
+* `DATABASE_URL`: PostgreSQL connection string.
+* `JWT_SECRET`: Secret key for JWT signing.
+* `JWT_EXPIRES_IN`: JWT expiration time.
 
-3. Run locally
+### 3. Run the Application
 
 ```bash
-# development
+# Development mode
 npm run start:dev
+
 ```
 
-Open the docs at http://localhost:3000/api/docs
+The API will be running at `http://localhost:3000`. 
 
 ---
 
-## Testing
+## 🧪 Testing
 
-E2E tests are present and cover authentication flows and protected endpoints (JWT validation). Run tests with:
+E2E tests are included to validate the authentication flow and protected routes.
 
 ```bash
 npm run test:e2e
+
 ```
 
-These tests ensure:
-- Registration and login return a valid access token
-- Protected endpoints return 401 when no or invalid token is provided
-- Endpoints allow access with a valid token
+**Test Coverage:**
+
+* Successful Registration & Login returning a valid JWT.
+* Access denial for protected routes without a token.
+* Access denial for invalid or expired tokens.
+* Successful access using a valid token.
 
 ---
 
-## Notes
+## 📝 Notes
 
-- This repository purposefully avoids adding features beyond the specification of the test; only existing endpoints are documented and visible in Swagger.
-- The API is stateless and uses JWT tokens; logout endpoint exists for symmetry but token revocation is not implemented (client-side token discard is expected).
+* This API is **stateless** using JWT.
+* Token revocation is not implemented; logout is handled on the client side. 
+* Only features relevant to the technical assessment have been implemented.
 
 ---
 
-If you need help running the project or want CI configured to run lint and e2e, I can add that next.
+## 👤 Author
+
+**Mukti Abdi**
+*Backend Developer (Internship Candidate)* 
