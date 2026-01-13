@@ -1,4 +1,13 @@
-import { Controller, Post, Body, UseGuards, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Patch,
+  Param,
+  Delete,
+  Get,
+} from '@nestjs/common';
 import { EventsService } from '../service/events.service';
 import { CreateEventDto } from '../dto/create-event.dto';
 import { UpdateEventDto } from '../dto/update-event.dto';
@@ -12,6 +21,18 @@ import { User, UserRole } from '../../users/entities/user.entity';
 export class EventsController {
   constructor(private eventsService: EventsService) {}
 
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async findAll() {
+    return this.eventsService.findAll();
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async findOne(@Param('id') id: string) {
+    return this.eventsService.findOne(id);
+  }
+
   @Post('create')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ORGANIZER)
@@ -22,7 +43,11 @@ export class EventsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ORGANIZER)
-  async update(@Param('id') id: string, @Body() dto: UpdateEventDto, @CurrentUser() user: User) {
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateEventDto,
+    @CurrentUser() user: User,
+  ) {
     return this.eventsService.update(id, dto as any, user);
   }
 
