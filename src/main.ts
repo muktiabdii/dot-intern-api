@@ -10,8 +10,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()
-    .setTitle('Dot Intern Event API')
-    .setDescription('Event management API for the internship technical test')
+    .setTitle('Event Management System')
+    .setDescription('Backend REST API for simple event management, built using NestJS as part of an internship technical assessment. This project focuses on authentication, authorization, API design, and testability rather than feature breadth.')
     .setVersion('1.0.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
