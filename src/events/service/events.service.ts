@@ -28,4 +28,32 @@ export class EventsService {
   findAll() {
     return this.repo.find({ relations: ['organizer', 'registrations', 'feedbacks'] });
   }
+
+  async findOne(id: string) {
+    return this.repo.findOne({ where: { id }, relations: ['organizer', 'registrations', 'feedbacks'] });
+  }
+
+  async update(id: string, partial: Partial<CreateEventDto>, user: User) {
+    const event = await this.findOne(id);
+    if (!event) throw new (require('@nestjs/common').NotFoundException)('Event not found');
+    // only organizer who owns the event can update
+    if (!event.organizer || event.organizer.id !== user.id) throw new (require('@nestjs/common').ForbiddenException)('Not authorized');
+
+    if (partial.title !== undefined) event.title = partial.title as string;
+    if (partial.description !== undefined) event.description = partial.description as string;
+    if (partial.date !== undefined) event.date = new Date(partial.date as string);
+
+    const saved = await this.repo.save(event);
+    if (saved.organizer && (saved.organizer as any).password) delete (saved.organizer as any).password;
+    return saved;
+  }
+
+  async remove(id: string, user: User) {
+    const event = await this.findOne(id);
+    if (!event) throw new (require('@nestjs/common').NotFoundException)('Event not found');
+    if (!event.organizer || event.organizer.id !== user.id) throw new (require('@nestjs/common').ForbiddenException)('Not authorized');
+
+    await this.repo.remove(event);
+    return { success: true };
+  }
 }
