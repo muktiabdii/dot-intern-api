@@ -21,78 +21,119 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Dot Intern Event API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A simple event management REST API implemented with NestJS — created as an internship technical test.
 
-## Project setup
+## Project Overview
+
+This application provides endpoints for managing events, registering users for events and leaving feedback. The API is built as a small, pragmatic backend suitable for an internship-level technical evaluation.
+
+Use case: Event management API for a technical test (organizers can create events; users can register and leave feedback).
+
+---
+
+## Features
+
+- JWT-based authentication (login / register)
+- Role support: **user** and **organizer**
+- Event management (create, update, delete by organizers)
+- Event registration (users can join events)
+- Feedback system (users can leave feedback for events they joined; organizers can delete feedback on their events)
+- Pagination support on list endpoints
+- Swagger (OpenAPI) documentation available
+- E2E tests for authentication and protected routes
+
+---
+
+## Tech Stack
+
+- NestJS
+- TypeScript
+- PostgreSQL
+- TypeORM
+- JWT Authentication
+- Swagger (OpenAPI)
+- Jest (e2e testing)
+
+---
+
+## Architecture Pattern
+
+This project uses a **Layered Architecture** comprised of the following layers:
+
+- Controller — handles HTTP requests and maps them to services
+- Service — contains business logic and orchestrates operations
+- Repository — data access layer (TypeORM entities + repositories)
+
+Why layered?
+- Familiar and easy to reason about for small-to-medium projects
+- Clear separation of concerns between HTTP handling, business logic and data persistence
+- Appropriate scope for an internship technical evaluation
+
+Note: For larger systems, Clean Architecture or Hexagonal Architecture could be adopted for improved decoupling; the layered approach here was chosen intentionally for clarity and brevity.
+
+---
+
+## API Documentation (Swagger)
+
+Interactive API docs are available at:
+
+http://localhost:3000/api/docs
+
+Swagger documents all existing endpoints and supports JWT Bearer authentication using the **Authorize** button. To call protected endpoints from the UI, click **Authorize** and enter a value in the form "Bearer <token>".
+
+Resource tags in Swagger: Auth, Users, Events, Registrations, Feedbacks, JWT Auth
+
+---
+
+## Running the project
+
+1. Install dependencies
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+2. Environment variables
+
+Copy `.env.example` (if present) and ensure environment values are set for:
+
+- DATABASE_URL (Postgres connection string)
+- JWT_SECRET
+- PORT (optional, defaults to 3000)
+
+3. Run locally
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
 
-## Run tests
+Open the docs at http://localhost:3000/api/docs
+
+---
+
+## Testing
+
+E2E tests are present and cover authentication flows and protected endpoints (JWT validation). Run tests with:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test:e2e
 ```
 
-## Deployment
+These tests ensure:
+- Registration and login return a valid access token
+- Protected endpoints return 401 when no or invalid token is provided
+- Endpoints allow access with a valid token
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Notes
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+- This repository purposefully avoids adding features beyond the specification of the test; only existing endpoints are documented and visible in Swagger.
+- The API is stateless and uses JWT tokens; logout endpoint exists for symmetry but token revocation is not implemented (client-side token discard is expected).
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+If you need help running the project or want CI configured to run lint and e2e, I can add that next.
